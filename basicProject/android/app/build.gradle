@@ -101,8 +101,17 @@ android {
         applicationId "com.basicproject"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        def nevercodeBuild = System.getenv()["NEVERCODE_BUILD"]
+        logger.quiet(System.getenv().toMapString())
+        if (nevercodeBuild) {
+            logger.quiet("NEVERCODE_BUILD variable is true")
+            def buildNumber = System.getenv()["BUILD_NUMBER"]
+            logger.quiet("BUILD_NUMBER: " + buildNumber)
+            versionName = "1.0." + buildNumber 
+            versionCode = Integer.valueOf(buildNumber)
+        } else {
+            logger.quiet("NEVERCODE_BUILD variable is false")
+        }
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
